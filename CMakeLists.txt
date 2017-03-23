@@ -63,7 +63,7 @@ add_message_files( FILES my_message.msg )
 # )
 add_service_files(
   FILES
-  get_command.srv
+  hackathon_23.srv
 )
 
 ## Generate actions in the 'action' folder

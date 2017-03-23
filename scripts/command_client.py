@@ -2,26 +2,30 @@
 
 import sys
 import rospy
-from beginner_tutorials.srv import *
+from hackathon_23.srv import *
 
-def add_two_ints_client(x, y):
-    rospy.wait_for_service('add_two_ints')
+def get_command_client(x):
+    rospy.wait_for_service('get_command')
     try:
-        add_two_ints = rospy.ServiceProxy('add_two_ints', AddTwoInts)
-        resp1 = add_two_ints(x, y)
-        return resp1.sum
+        command = rospy.ServiceProxy('get_command', hackathon_23)
+        resp1 = command(x)
+        return resp1.machine_command
     except rospy.ServiceException, e:
         print "Service call failed: %s"%e
 
 def usage():
-    return "%s [x y]"%sys.argv[0]
+    return "%s [x]"%sys.argv[0]
 
 if __name__ == "__main__":
-    if len(sys.argv) == 3:
-        x = int(sys.argv[1])
-        y = int(sys.argv[2])
-    else:
-        print usage()
-        sys.exit(1)
-    print "Requesting %s+%s"%(x, y)
-    print "%s + %s = %s"%(x, y, add_two_ints_client(x, y))
+    while True:    # infinite loop
+        n = raw_input("\nChoose number of command\n 0 - Start the Robot\n 1 - Forward\n 2 - Backward\n 3 - Left\n 4 - Right\n 5 - Autorun\n 6 - Stop the Robot \n 9 - Exit\n Type the command number here: ")
+        if int(n) < 7:
+            (get_command_client(n))
+        elif n == "9":
+            print "\nExit System\n\nGood Bye!"
+            break
+        else:
+            pass
+
+    # x = sys.argv[1]
+    # print "Requesting Command: %s"%(get_command_client(x))
