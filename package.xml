@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package>
+  <name>hackathon_23</name>
+  <version>0.0.0</version>
+  <description>The hackathon_23 package</description>
+
+  <maintainer email="zahid@todo.todo">zahid</maintainer>
+  <maintainer email="porche120@gmail.com">Porch</maintainer>
+
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>message_generation</build_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>xacro</run_depend>
+  <run_depend>youbot_gazebo_control</run_depend>
+  <run_depend>youbot_gazebo_worlds</run_depend>
+  <run_depend>youbot_description</run_depend>
+  <run_depend>gazebo_ros</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+
+</package>
