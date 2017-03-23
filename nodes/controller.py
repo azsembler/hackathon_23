@@ -18,6 +18,7 @@ def stopYouBot():
 
     youBot_publisher.publish(twist)
 
+# Moves youBot based on command in /input topic
 def move_callback(message):
     command = message.data.lower()
     twist = Twist()
@@ -51,6 +52,7 @@ def move_callback(message):
     else:
         rospy.loginfo("youBot is off")
 
+#Set flag based on command in /event_in topic
 def trigger_callback(message):
     global youBotOn
     command = message.data.lower()
@@ -65,6 +67,8 @@ def trigger_callback(message):
 
         stopYouBot()
 
+# Checks distance for start while moving and stops when
+# the distance is equal to distance in parameter
 def odom_callback(message):
     global coordinateInitialized
     global startX
@@ -95,12 +99,17 @@ def main():
     global youBot_publisher
 
     rospy.init_node('controller')
+
+    # Subscribing to navigation commands
     rospy.Subscriber('/input', String, move_callback)
 
+    # Subscribing to start/stop commands
     rospy.Subscriber('/event_in', String, trigger_callback)
 
+    # Subscribing to get Odometry data for current X,Y coordinates
     rospy.Subscriber("/odom", Odometry, odom_callback)
 
+    # Publisher for youBot to navigate
     youBot_publisher = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
 
     rate = rospy.Rate(10)
