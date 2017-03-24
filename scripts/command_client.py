@@ -3,6 +3,9 @@
 import sys
 import rospy
 from hackathon_23.srv import *
+from std_msgs.msg import String
+from geometry_msgs.msg import Twist
+from nav_msgs.msg import Odometry
 
 def get_command_client(x):
     rospy.wait_for_service('get_command')
@@ -13,14 +16,13 @@ def get_command_client(x):
     except rospy.ServiceException, e:
         print "Service call failed: %s"%e
 
-def usage():
-    return "%s [x]"%sys.argv[0]
 
 if __name__ == "__main__":
+    com = ""
     while True:    # infinite loop
-        n = raw_input("\nChoose number of command\n 0 - Start the Robot\n 1 - Forward\n 2 - Backward\n 3 - Left\n 4 - Right\n 5 - Autorun\n 6 - Stop the Robot \n 9 - Exit\n Type the command number here: ")
-        if int(n) < 7:
-            (get_command_client(n))
+        n = raw_input("\nChoose number of command\n 0 - Turn On \n 1 - Forward\n 2 - Backward\n 3 - Left\n 4 - Right\n 5 - Autorun\n 6 - Stop\n 7 - Turn Off \n 9 - Exit\n Type the command number here: ")
+        if int(n) < 8:
+            com = get_command_client(n)
         elif n == "9":
             print "\nExit System\n\nGood Bye!"
             break
