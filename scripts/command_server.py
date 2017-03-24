@@ -11,12 +11,43 @@ coordinateInitialized = False
 startX=0.0
 startY=0.0
 
-def execute_command(com):
-    command = com
-    global youBotOn
+# def setStartPosition():
+#     global startX
+#     startX = Odometry.pose.pose.position.x
+#     global startY
+#     startY= Odometry.pose.pose.position.y
+
+def odom_callback(message):
     global coordinateInitialized
     global startX
     global startY
+
+    if(not coordinateInitialized):
+        coordinateInitialized = True
+        startX = message.pose.pose.position.x
+        startY = message.pose.pose.position.y
+
+    currentX = message.pose.pose.position.x
+    currentY = message.pose.pose.position.y
+
+    distance = (((currentX - startX) ** 2) + ((currentY - startY) ** 2)) ** 0.5
+
+    targetDistance = rospy.get_param("/distance", 0.5)
+
+    if(distance >= targetDistance):
+        startX = currentX
+        startY = currentY
+
+        rospy.loginfo("Current position, X: %s, Y: %s" %(startX, startY))
+        execute_command("Stop")
+
+def execute_command(com):
+    # setStartPosition()
+    command = com
+    global youBotOn
+    # global coordinateInitialized
+    # global startX
+    # global startY
     twist = Twist()
     lin_x = 0.0
     lin_y = 0.0
@@ -62,6 +93,7 @@ def execute_command(com):
         twist.linear.x = lin_x
         twist.linear.y = lin_y
         twist.angular.z = ang_z
+        rospy.Subscriber("/odom", Odometry, odom_callback)
         youBot_publisher.publish(twist)
         if command =="Off":
             youBotOn = False
@@ -111,4 +143,5 @@ def get_command_server():
 if __name__ == "__main__":
     global youBot_publisher
     youBot_publisher = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
+    # rospy.Subscriber("/odom", Odometry, odom_callback)
     get_command_server()
